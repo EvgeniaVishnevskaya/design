@@ -7,6 +7,7 @@ import {SiteHeader} from '@/components/SiteHeader';
 import {Visual} from '@/components/Visual';
 import {Drawer} from '@/components/Drawer';
 import {getProject, projects, softlogicDetails} from '@/lib/projects';
+import {nbsp} from '@/lib/typography';
 import styles from './page.module.css';
 
 type CaseSection={title:string;copy:string};
@@ -49,8 +50,29 @@ export async function generateMetadata({params}:{params:Promise<{slug:string}>})
 
 function ProjectFooter({current}:{current:string}){const related=projects.filter(p=>p.status==='published'&&p.slug!==current);return <><section className={`container ${styles.more}`}><h2>Другие проекты</h2><div>{related.map(p=><Link href={`/work/${p.slug}`} key={p.slug}><span>{p.title}</span><ArrowUpRight aria-hidden="true"/></Link>)}</div></section><footer className={`container ${styles.footer}`}><strong>ВИШНЕВСКАЯ ЕВГЕНИЯ</strong><Link href="/#work">Все кейсы</Link><a href="https://t.me/vishnevskayadsgn">Telegram</a></footer></>}
 
+const softlogicCards=[
+  ['face-recognition','Распознавание лиц','/portfolio/softlogic-card-face.png'],['camera-management','Управление камерами','/portfolio/softlogic-card-camera.png'],['video-analytics','Видеоаналитика','/portfolio/softlogic-card-video.png'],['report-builder','Создание отчётов','/portfolio/softlogic-card-report.png'],['user-profile','Профиль пользователя','/portfolio/softlogic-card-profile.png'],
+];
+
+function SoftlogicCase(){return <main className={styles.softlogicPage}>
+  <section className={styles.softHero}><div className="container"><SiteHeader/><div className={styles.softTitle}><h1>Softlogic.AI</h1><h2>{nbsp('B2B-платформа видеоаналитики на основе компьютерного зрения')}</h2><div>{['Product design','B2B / Enterprise','UX/UI Design','Computer Vision','Data Visualization'].map((tag,index)=><span className={index<2?styles.blueTag:undefined} key={tag}>{tag}</span>)}</div></div><div className={styles.softAbout}><div className={styles.laptop}><img src="/portfolio/softlogic-laptop.png" alt="Интерфейс платформы Softlogic.AI на экране ноутбука"/></div><h3>{nbsp('О проекте')}</h3><div><p>{nbsp('Softlogic.ai разрабатывала решения на основе компьютерного зрения для автоматизации мониторинга и анализа видеопотока')}</p><p>{nbsp('Платформа позволяла подключать камеры, обрабатывать видеоданные с помощью нейросетей, обнаруживать события и работать с результатами видеоаналитики через интерфейс системы')}</p><p>{nbsp('На базе единой платформы создавались решения для разных бизнес-задач: от распознавания лиц и контроля зон до мониторинга поведения водителей и безопасности на производстве.')}</p><p>{nbsp('В зависимости от потребностей клиента использовался определённый набор функциональных возможностей платформы')}</p><div className={styles.softMeta}><div><strong>Роль</strong><span>Продуктовый дизайнер</span><span>UX-исследователь</span></div><div><strong>Инструменты</strong><span>Figma</span><span>FigJam</span><span>Notion</span></div><div><strong>Scope</strong><span>Исследование</span><span>Прототип</span><span>UX-тесты</span></div></div></div></div></div></section>
+  <section className={`container ${styles.softSection}`}><h2>{nbsp('Контекст и бизнес-задача')}</h2><div className={styles.contextBlock}><div><p>{nbsp('Компьютерное зрение позволяет автоматически анализировать видеопоток и выявлять события, которые человеку пришлось бы отслеживать вручную')}</p><p>{nbsp('Однако обнаружение события — только часть процесса. Пользователю также необходимо понять, что произошло, проверить результат распознавания, найти источник события и при необходимости изучить видеозапись или данные объекта')}</p><p>{nbsp('При этом сценарии использования платформы различались в зависимости от отрасли и задач клиента')}</p><p>{nbsp('Задача проекта заключалась в создании масштабируемой UX/UI-архитектуры платформы.')}</p></div><img src="/portfolio/softlogic-context-visual.png" alt="Интерфейс видеоаналитики Softlogic.AI"/></div></section>
+  <section className={`container ${styles.softSection}`}><h2>Пользователи</h2><img className={styles.wideAsset} src="/portfolio/softlogic-users.png" alt="Операторы мониторинга, руководители и специалисты по безопасности, технические специалисты и администраторы"/></section>
+  <section className={`container ${styles.softSection}`}><h2>{nbsp('Как всё устроено')}</h2><img className={styles.wideAsset} src="/portfolio/softlogic-flow.png" alt="Схема возможностей платформы и применения в разных отраслях"/></section>
+  <section className={`container ${styles.softSection}`}><img className={styles.wideAsset} src="/portfolio/softlogic-role.png" alt="Моя роль в проектировании платформы"/></section>
+  <section className={`container ${styles.softSection}`}><h2>Кейсы</h2><div className={styles.softCards}>{softlogicCards.map(([slug,title,src])=><Link href={`/work/softlogic-ai?detail=${slug}`} scroll={false} key={slug}><img src={src} alt={title}/></Link>)}</div></section>
+  <Suspense fallback={null}><Drawer/></Suspense><ProjectFooter current="softlogic-ai"/>
+</main>}
+
+function FigmaFrameCase({slug,title}:{slug:'smart-city'|'idm'|'reporting';title:string}){
+  const desktop=`/portfolio/case-${slug}.png`;
+  return <main className={styles.figmaCase} aria-label={title}><picture>{slug==='smart-city'&&<source media="(max-width: 600px)" srcSet="/portfolio/case-smart-city-mobile.png"/>}<img src={desktop} alt={`${title}. Полный кейс из Figma`}/></picture></main>;
+}
+
 export default async function WorkPage({params}:{params:Promise<{slug:string}>}){
   const {slug}=await params; const project=getProject(slug); const data=content[slug]; if(!project||project.status!=='published'||!data)notFound(); const isSoftlogic=slug==='softlogic-ai';
+  if(isSoftlogic)return <SoftlogicCase/>;
+  if(slug==='smart-city'||slug==='idm'||slug==='reporting')return <FigmaFrameCase slug={slug} title={project.title}/>;
   return <main className={styles.page}>
     <section className={styles.hero}><div className="container"><SiteHeader/><div className={styles.crumbs}><Link href="/#work"><ArrowLeft/>Все кейсы</Link><span>{project.company} / {project.title}</span></div><div className={styles.intro}><div><h1>{project.title}</h1><p>{project.subtitle}</p><div className={styles.tags}>{project.tags.map(tag=><span key={tag}>{tag}</span>)}</div></div><div className={styles.about}><h2>О проекте</h2><p>{data.intro}</p><dl><div><dt>Роль</dt><dd>{data.role}</dd></div><div><dt>Компания</dt><dd>{data.period}</dd></div></dl></div></div><Visual kind={project.visual} large/></div></section>
     <div className={styles.caseBody}>{data.sections.map((section,index)=><section className={`container ${styles.caseSection} ${index%2?styles.flip:''}`} key={section.title}><div className={styles.sectionCopy}><span>0{index+1}</span><h2>{section.title}</h2><p>{section.copy}</p></div><div className={styles.sectionVisual}><Visual kind={project.visual} large/></div></section>)}</div>

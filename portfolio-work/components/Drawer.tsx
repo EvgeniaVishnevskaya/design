@@ -3,7 +3,6 @@ import { useEffect,useRef } from 'react';
 import { usePathname,useRouter,useSearchParams } from 'next/navigation';
 import { ArrowRight, X } from 'lucide-react';
 import { softlogicDetails } from '@/lib/projects';
-import { Visual } from './Visual';
 import styles from './Drawer.module.css';
 
 export function Drawer() {
@@ -24,19 +23,16 @@ export function Drawer() {
   },[item,pathname,router]);
   if(!item)return null;
   const next=softlogicDetails[(idx+1)%softlogicDetails.length];
-  const sections=[
-    ['Задача',item.challenge],
-    ['Пользовательский сценарий',`Экран «${item.title}» связан с общей архитектурой платформы: пользователь сохраняет контекст и может перейти от списка к объекту, событию или исходному видеопотоку.`],
-    ['Решение',item.outcome],
-    ['Компоненты и состояния','В макете предусмотрены основные состояния данных, фильтрация, навигация и действия с выбранным объектом. Неподтверждённые показатели в экран не добавлены.'],
-  ];
+  const assets:Record<string,string>={
+    'face-recognition':'/portfolio/drawer-face-recognition.png','camera-management':'/portfolio/drawer-camera-management.png','video-analytics':'/portfolio/drawer-video-analytics.png','report-builder':'/portfolio/drawer-report-builder.png','user-profile':'/portfolio/drawer-user-profile.png'
+  };
   const close=()=>router.replace(pathname,{scroll:false});
   return <div className={styles.backdrop} onMouseDown={(e)=>{if(e.target===e.currentTarget)close()}}>
-    <section id="project-drawer" className={styles.panel} role="dialog" aria-modal="true" aria-labelledby="drawer-title" aria-describedby="drawer-description">
-      <div className={styles.top}><span>КЕЙСЫ / SOFTLOGIC.AI / <strong>{item.title.toUpperCase()}</strong></span><button ref={closeRef} className={styles.close} onClick={close} aria-label="Закрыть кейс"><X size={22}/></button></div>
-      <div className={styles.intro}><div><h2 id="drawer-title">{item.title}</h2><h3>О проекте</h3><p id="drawer-description">{item.lead}</p><p>Это один из взаимосвязанных сценариев платформы Softlogic.AI.</p></div><Visual kind={item.visual} large/></div>
-      <div className={styles.body}>{sections.map(([title,copy],sectionIndex)=><section className={sectionIndex%2?styles.reverse:undefined} key={title}><div><span>0{sectionIndex+1}</span><h3>{title}</h3><p>{copy}</p></div><Visual kind={item.visual} large/></section>)}</div>
-      <button className={styles.next} onClick={()=>router.replace(`${pathname}?detail=${next.slug}`,{scroll:false})}>Следующий кейс: {next.title} <ArrowRight size={18} aria-hidden="true"/></button>
+    <section id="project-drawer" className={`${styles.panel} ${styles.figmaPanel}`} role="dialog" aria-modal="true" aria-labelledby="drawer-title" aria-describedby="drawer-description">
+      <h2 id="drawer-title" className={styles.srOnly}>{item.title}</h2><p id="drawer-description" className={styles.srOnly}>{item.lead}</p>
+      <img className={styles.figmaScreen} src={assets[item.slug]} alt={`${item.title}. Экран кейса из Figma`}/>
+      <button ref={closeRef} className={styles.figmaClose} onClick={close} aria-label="Закрыть кейс"><X size={22}/></button>
+      <button className={styles.figmaNext} onClick={()=>router.replace(`${pathname}?detail=${next.slug}`,{scroll:false})} aria-label={`Следующий кейс: ${next.title}`}><ArrowRight size={18} aria-hidden="true"/></button>
     </section>
   </div>;
 }
