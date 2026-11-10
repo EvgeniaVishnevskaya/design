@@ -7,14 +7,14 @@ export const portfolioAssets: {
   portrait: string | null;
   visuals: Record<VisualKey, string | null>;
 } = {
-  portrait: null,
+  portrait: '/portfolio/portrait.png',
   visuals: {
-    'report-designer': null,
-    tfsix: null,
-    idm: null,
-    softlogic: null,
-    'smart-city': null,
-    reporting: null,
+    'report-designer': '/portfolio/report-designer.png',
+    tfsix: '/portfolio/tfsix.png',
+    idm: '/portfolio/idm.png',
+    softlogic: '/portfolio/softlogic.png',
+    'smart-city': '/portfolio/smart-city.png',
+    reporting: '/portfolio/reporting.png',
     face: null,
     camera: null,
     video: null,
