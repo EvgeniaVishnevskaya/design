@@ -1,7 +1,7 @@
 'use client';
 import { useEffect,useRef } from 'react';
 import { usePathname,useRouter,useSearchParams } from 'next/navigation';
-import { ArrowRight, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import { softlogicDetails } from '@/lib/projects';
 import styles from './Drawer.module.css';
 
@@ -14,12 +14,15 @@ export function Drawer() {
   useEffect(()=>{
     if(!item)return;
     const previous=document.activeElement as HTMLElement|null;
-    const oldOverflow=document.body.style.overflow;
-    document.body.style.overflow='hidden';
+    const scrollY=window.scrollY;
+    const oldStyles={overflow:document.body.style.overflow,position:document.body.style.position,top:document.body.style.top,width:document.body.style.width};
+    const oldRootOverflow=document.documentElement.style.overflow;
+    document.documentElement.style.overflow='hidden';
+    Object.assign(document.body.style,{overflow:'hidden',position:'fixed',top:`-${scrollY}px`,width:'100%'});
     const focusFrame=requestAnimationFrame(()=>closeRef.current?.focus());
     const esc=(e:KeyboardEvent)=>{if(e.key==='Escape')router.replace(pathname,{scroll:false});if(e.key==='Tab'){const root=document.getElementById('project-drawer');const els=root?.querySelectorAll<HTMLElement>('a[href],button:not([disabled])');if(!els?.length)return;const first=els[0],last=els[els.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}};
     document.addEventListener('keydown',esc);
-    return()=>{cancelAnimationFrame(focusFrame);document.body.style.overflow=oldOverflow;document.removeEventListener('keydown',esc);previous?.focus()};
+    return()=>{cancelAnimationFrame(focusFrame);document.documentElement.style.overflow=oldRootOverflow;Object.assign(document.body.style,oldStyles);window.scrollTo(0,scrollY);document.removeEventListener('keydown',esc);previous?.focus()};
   },[item,pathname,router]);
   if(!item)return null;
   const next=softlogicDetails[(idx+1)%softlogicDetails.length];
@@ -30,9 +33,9 @@ export function Drawer() {
   return <div className={styles.backdrop} onMouseDown={(e)=>{if(e.target===e.currentTarget)close()}}>
     <section id="project-drawer" className={`${styles.panel} ${styles.figmaPanel}`} role="dialog" aria-modal="true" aria-labelledby="drawer-title" aria-describedby="drawer-description">
       <h2 id="drawer-title" className={styles.srOnly}>{item.title}</h2><p id="drawer-description" className={styles.srOnly}>{item.lead}</p>
-      <img className={styles.figmaScreen} src={assets[item.slug]} alt={`${item.title}. Экран кейса из Figma`}/>
-      <button ref={closeRef} className={styles.figmaClose} onClick={close} aria-label="Закрыть кейс"><X size={22}/></button>
-      <button className={styles.figmaNext} onClick={()=>router.replace(`${pathname}?detail=${next.slug}`,{scroll:false})} aria-label={`Следующий кейс: ${next.title}`}><ArrowRight size={18} aria-hidden="true"/></button>
+      <header className={styles.figmaHeader}><span>КЕЙСЫ&nbsp;&nbsp;/&nbsp;&nbsp;SOFTLOGIC.AI&nbsp;&nbsp;/&nbsp;&nbsp;<strong>{item.title}</strong></span><button ref={closeRef} className={styles.figmaClose} onClick={close} aria-label="Закрыть кейс"><X size={22}/></button></header>
+      <div className={styles.figmaScroll}><img className={styles.figmaScreen} src={assets[item.slug]} alt={`${item.title}. Экран кейса из Figma`}/></div>
+      <footer className={styles.figmaFooter}><button onClick={()=>router.replace(`${pathname}?detail=${next.slug}`,{scroll:false})} aria-label={`Следующий кейс: ${next.title}`}>СЛЕДУЮЩИЙ КЕЙС</button><span>{next.title}</span></footer>
     </section>
   </div>;
 }
