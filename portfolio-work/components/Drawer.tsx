@@ -11,6 +11,8 @@ export function Drawer() {
   const idx=softlogicDetails.findIndex(d=>d.slug===slug);
   const item=softlogicDetails[idx];
   const closeRef=useRef<HTMLButtonElement>(null);
+  const scrollRef=useRef<HTMLDivElement>(null);
+  useEffect(()=>{scrollRef.current?.scrollTo({top:0,behavior:'instant'})},[slug]);
   useEffect(()=>{
     if(!item)return;
     const previous=document.activeElement as HTMLElement|null;
@@ -37,7 +39,7 @@ export function Drawer() {
     <section id="project-drawer" className={`${styles.panel} ${styles.figmaPanel}`} role="dialog" aria-modal="true" aria-labelledby="drawer-title" aria-describedby="drawer-description">
       <h2 id="drawer-title" className={styles.srOnly}>{item.title}</h2><p id="drawer-description" className={styles.srOnly}>{item.lead}</p>
       <header className={styles.figmaHeader}><span>КЕЙСЫ&nbsp;&nbsp;/&nbsp;&nbsp;SOFTLOGIC.AI&nbsp;&nbsp;/&nbsp;&nbsp;<strong>{item.title}</strong></span><button ref={closeRef} className={styles.figmaClose} onClick={close} aria-label="Закрыть кейс"><X size={22}/></button></header>
-      <div className={styles.figmaScroll}><picture><source media="(max-width: 760px)" srcSet={mobileAssets[item.slug]}/><img className={styles.figmaScreen} src={assets[item.slug]} alt={`${item.title}. Экран кейса из Figma`}/></picture></div>
+      <div ref={scrollRef} className={styles.figmaScroll}><picture><source media="(max-width: 760px)" srcSet={mobileAssets[item.slug]}/><img className={styles.figmaScreen} src={assets[item.slug]} alt={`${item.title}. Экран кейса из Figma`}/></picture></div>
       <footer className={styles.figmaFooter}><button onClick={()=>router.replace(`${pathname}?detail=${next.slug}`,{scroll:false})} aria-label={`Следующий кейс: ${next.title}`}>СЛЕДУЮЩИЙ КЕЙС</button><span>{next.title}</span></footer>
     </section>
   </div>;

@@ -14,3 +14,4 @@
 @media(max-width:900px){.softMobileFrame{display:block}.softlogicPage>.softHero,.softlogicPage>.softSection,.softlogicPage>.more,.softlogicPage>.footer{display:none}}
 .mobileCaseSwitch{display:none}
 @media(max-width:600px){.figmaCase picture{display:block;width:calc(100% + 30px);margin-left:-15px;overflow:hidden}.figmaCase picture img{width:100%}.mobileCaseSwitch{display:grid;gap:10px;padding:36px 20px 120px;background:#000}.mobileCaseSwitch a{display:flex;align-items:center;justify-content:space-between;min-height:58px;padding:0 18px;border:1px solid #555;font-size:14px}.mobileCaseSwitch svg{width:18px}.softMobileFrame .mobileCaseSwitch{position:relative;z-index:3}}
+@media(max-width:600px){.figmaCase picture{width:100%;margin-left:0}.softMobileLinks{inset:0 0 auto;height:auto;aspect-ratio:393/7946}}
