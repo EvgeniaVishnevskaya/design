@@ -29,12 +29,15 @@ export function Drawer() {
   const assets:Record<string,string>={
     'face-recognition':'/portfolio/drawer-face-recognition.png','camera-management':'/portfolio/drawer-camera-management.png','video-analytics':'/portfolio/drawer-video-analytics.png','report-builder':'/portfolio/drawer-report-builder.png','user-profile':'/portfolio/drawer-user-profile.png'
   };
+  const mobileAssets:Record<string,string>={
+    'face-recognition':'/portfolio/drawer-face-recognition-mobile.png','camera-management':'/portfolio/drawer-camera-management-mobile.png','video-analytics':'/portfolio/drawer-video-analytics-mobile.png','report-builder':'/portfolio/drawer-report-builder-mobile.png','user-profile':'/portfolio/drawer-user-profile-mobile.png'
+  };
   const close=()=>router.replace(pathname,{scroll:false});
   return <div className={styles.backdrop} onMouseDown={(e)=>{if(e.target===e.currentTarget)close()}}>
     <section id="project-drawer" className={`${styles.panel} ${styles.figmaPanel}`} role="dialog" aria-modal="true" aria-labelledby="drawer-title" aria-describedby="drawer-description">
       <h2 id="drawer-title" className={styles.srOnly}>{item.title}</h2><p id="drawer-description" className={styles.srOnly}>{item.lead}</p>
       <header className={styles.figmaHeader}><span>КЕЙСЫ&nbsp;&nbsp;/&nbsp;&nbsp;SOFTLOGIC.AI&nbsp;&nbsp;/&nbsp;&nbsp;<strong>{item.title}</strong></span><button ref={closeRef} className={styles.figmaClose} onClick={close} aria-label="Закрыть кейс"><X size={22}/></button></header>
-      <div className={styles.figmaScroll}><img className={styles.figmaScreen} src={assets[item.slug]} alt={`${item.title}. Экран кейса из Figma`}/></div>
+      <div className={styles.figmaScroll}><picture><source media="(max-width: 760px)" srcSet={mobileAssets[item.slug]}/><img className={styles.figmaScreen} src={assets[item.slug]} alt={`${item.title}. Экран кейса из Figma`}/></picture></div>
       <footer className={styles.figmaFooter}><button onClick={()=>router.replace(`${pathname}?detail=${next.slug}`,{scroll:false})} aria-label={`Следующий кейс: ${next.title}`}>СЛЕДУЮЩИЙ КЕЙС</button><span>{next.title}</span></footer>
     </section>
   </div>;
