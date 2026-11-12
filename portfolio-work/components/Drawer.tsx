@@ -1,5 +1,6 @@
 'use client';
 import { useEffect,useRef } from 'react';
+import Link from 'next/link';
 import { usePathname,useRouter,useSearchParams } from 'next/navigation';
 import { X } from 'lucide-react';
 import { softlogicDetails } from '@/lib/projects';
@@ -38,7 +39,7 @@ export function Drawer() {
   return <div className={styles.backdrop} onMouseDown={(e)=>{if(e.target===e.currentTarget)close()}}>
     <section id="project-drawer" className={`${styles.panel} ${styles.figmaPanel}`} role="dialog" aria-modal="true" aria-labelledby="drawer-title" aria-describedby="drawer-description">
       <h2 id="drawer-title" className={styles.srOnly}>{item.title}</h2><p id="drawer-description" className={styles.srOnly}>{item.lead}</p>
-      <header className={styles.figmaHeader}><span>КЕЙСЫ&nbsp;&nbsp;/&nbsp;&nbsp;SOFTLOGIC.AI&nbsp;&nbsp;/&nbsp;&nbsp;<strong>{item.title}</strong></span><button ref={closeRef} className={styles.figmaClose} onClick={close} aria-label="Закрыть кейс"><X size={22}/></button></header>
+      <header className={styles.figmaHeader}><span>КЕЙСЫ&nbsp;&nbsp;/&nbsp;&nbsp;SOFTLOGIC.AI&nbsp;&nbsp;/&nbsp;&nbsp;<strong>{item.title}</strong></span><nav className={styles.drawerLanguages} aria-label="Язык"><b>RU</b><span>|</span><Link href={`/en/work/softlogic-ai?detail=${item.slug}`}>EN</Link></nav><button ref={closeRef} className={styles.figmaClose} onClick={close} aria-label="Закрыть кейс"><X size={22}/></button></header>
       <div ref={scrollRef} className={styles.figmaScroll}><picture><source media="(max-width: 760px)" srcSet={mobileAssets[item.slug]}/><img className={styles.figmaScreen} src={assets[item.slug]} alt={`${item.title}. Экран кейса из Figma`}/></picture></div>
       <footer className={styles.figmaFooter}><button onClick={()=>router.replace(`${pathname}?detail=${next.slug}`,{scroll:false})} aria-label={`Следующий кейс: ${next.title}`}>СЛЕДУЮЩИЙ КЕЙС</button><span>{next.title}</span></footer>
     </section>
