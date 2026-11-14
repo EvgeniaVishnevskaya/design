@@ -1,8 +1,12 @@
 import type { Project } from '@/lib/projects';
+import { portfolioAssets } from '@/lib/portfolio-assets';
 import styles from './Visual.module.css';
 
 export function Visual({kind,large=false}:{kind:Project['visual']|string;large?:boolean}) {
-  return <div className={`${styles.canvas} ${styles[kind.replaceAll('-','_')]||''} ${large?styles.large:''}`} aria-label={`Абстрактный превью-макет: ${kind}`} role="img">
+  const src=portfolioAssets.visuals[kind as keyof typeof portfolioAssets.visuals];
+  const className=`${styles.canvas} ${styles[kind.replaceAll('-','_')]||''} ${large?styles.large:''}`;
+  if(src) return <div className={className}><img className={styles.asset} src={src} alt=""/></div>;
+  return <div className={className} aria-hidden="true" data-asset-slot={kind}>
     <div className={styles.window}>
       <div className={styles.toolbar}><span/><span/><span/><i/></div>
       <div className={styles.app}>
@@ -14,6 +18,5 @@ export function Visual({kind,large=false}:{kind:Project['visual']|string;large?:
         </div>
       </div>
     </div>
-    <div className={styles.note}>Иллюстрация будет заменена на экспорт из Figma</div>
   </div>;
 }
